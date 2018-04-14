@@ -10,7 +10,7 @@
         {
             //TODO: Currently, this only writes to the console. We will implement file I/O output as well.
 
-            Console.Write(message);
+            Console.WriteLine(message);
         }
     }
 }
