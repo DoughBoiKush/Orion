@@ -63,10 +63,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Orion.Logger\Orion.Logger.csproj">
+      <Project>{520e75f9-1982-471b-93ea-8e5f5bcf68ce}</Project>
+      <Name>Orion.Logger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orion.Server\Orion.Server.csproj">
       <Project>{5703608e-b441-4862-8479-f3eab8060ddb}</Project>
       <Name>Orion.Server</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
