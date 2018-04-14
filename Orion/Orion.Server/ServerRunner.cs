@@ -1,5 +1,7 @@
 ﻿namespace Orion.Server
 {
+    using System.Net;
+
     using Orion.Logger.Abstract;
     using Orion.Logger.Concrete;
     using Orion.Server.Abstract;
@@ -9,6 +11,12 @@
 
     public class ServerRunner
     {
+        private const string IpAddressString = "127.0.0.1";
+
+        private const int Port = 43594;
+
+        private static IPAddress ipAddress;
+
         private static IOrionLogger orionLogger;
 
         private static IServerProvider serverProvider;
@@ -17,11 +25,18 @@
 
         public static void Main()
         {
-            serverProvider = CreateServerProvider();
+            ipAddress = CreateIpAddress();
             tcpListenerWrapper = CreateTcpListenerWrapper();
             orionLogger = CreateOrionLogger();
 
+            serverProvider = CreateServerProvider();
+
             serverProvider.RunServer();
+        }
+
+        private static IPAddress CreateIpAddress()
+        {
+            return IPAddress.Parse(IpAddressString);
         }
 
         private static IOrionLogger CreateOrionLogger()
@@ -36,7 +51,7 @@
 
         private static ITcpListenerWrapper CreateTcpListenerWrapper()
         {
-            return new TcpListenerWrapper();
+            return new TcpListenerWrapper(Port, ipAddress);
         }
     }
 }
