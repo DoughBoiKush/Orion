@@ -11,7 +11,7 @@
     [TestFixture]
     public class TestServerProvider
     {
-        private const string ReadyForConnectionMessage = "Reading for connections...";
+        private const string ReadyForConnectionMessage = "Ready for connections...";
 
         private const string StartUpMessage = "Starting Server...";
 

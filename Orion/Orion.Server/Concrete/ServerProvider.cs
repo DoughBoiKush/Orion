@@ -6,7 +6,7 @@
 
     public class ServerProvider : IServerProvider
     {
-        private const string ReadyForConnectionMessage = "Reading for connections...";
+        private const string ReadyForConnectionMessage = "Ready for connections...";
 
         private const string StartUpMessage = "Starting Server...";
 
@@ -30,9 +30,10 @@
             while (ServerRunning)
             {
                 orionLogger.LogMessage(ReadyForConnectionMessage);
+
                 tcpListenerWrapper.AcceptTcpClient();
 
-                ServerRunning = false; //Only to run test once. (For now until implementation is complete)
+                //ServerRunning = false; //Only to run test once. (For now until implementation is complete)
             }
         }
     }
