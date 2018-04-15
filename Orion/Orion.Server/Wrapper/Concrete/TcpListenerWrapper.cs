@@ -9,12 +9,12 @@
     {
         public TcpClient AcceptTcpClient()
         {
-            throw new NotImplementedException();
+            return new TcpClient();
         }
 
         public void Start()
         {
-            throw new NotImplementedException();
+            //TODO: Implement
         }
     }
 }

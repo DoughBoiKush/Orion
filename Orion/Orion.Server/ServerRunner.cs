@@ -17,9 +17,9 @@
 
         public static void Main()
         {
-            serverProvider = CreateServerProvider();
             tcpListenerWrapper = CreateTcpListenerWrapper();
             orionLogger = CreateOrionLogger();
+            serverProvider = CreateServerProvider();
 
             serverProvider.RunServer();
         }
