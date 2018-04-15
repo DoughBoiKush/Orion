@@ -1,6 +1,10 @@
 ﻿namespace Orion.Server.Concrete
 {
+    using System.Net.Sockets;
+    using System.Threading;
+
     using Orion.Logger.Abstract;
+    using Orion.Network.Abstract;
     using Orion.Server.Abstract;
     using Orion.Server.Wrapper.Abstract;
 
@@ -12,12 +16,18 @@
 
         private readonly IOrionLogger orionLogger;
 
+        private readonly ITcpClientProcessor tcpClientProcessor;
+
         private readonly ITcpListenerWrapper tcpListenerWrapper;
 
-        public ServerProvider(IOrionLogger orionLogger, ITcpListenerWrapper tcpListenerWrapper)
+        public ServerProvider(
+            IOrionLogger orionLogger,
+            ITcpListenerWrapper tcpListenerWrapper,
+            ITcpClientProcessor tcpClientProcessor)
         {
             this.orionLogger = orionLogger;
             this.tcpListenerWrapper = tcpListenerWrapper;
+            this.tcpClientProcessor = tcpClientProcessor;
         }
 
         public bool ServerRunning { get; set; } = true; //TODO: Setup an actual controlled flag for this.
@@ -31,10 +41,17 @@
             {
                 orionLogger.LogMessage(ReadyForConnectionMessage);
 
-                tcpListenerWrapper.AcceptTcpClient();
+                var tcpClient = tcpListenerWrapper.AcceptTcpClient();
 
-                //ServerRunning = false; //Only to run test once. (For now until implementation is complete)
+                ThreadPool.QueueUserWorkItem(ProcessTcpClient, tcpClient);
             }
+        }
+
+        private void ProcessTcpClient(object client)
+        {
+            var tcpClient = (TcpClient)client;
+
+            tcpClientProcessor.ProcessClient(tcpClient);
         }
     }
 }

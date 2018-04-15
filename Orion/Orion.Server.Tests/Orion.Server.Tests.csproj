@@ -67,6 +67,10 @@
       <Project>{520e75f9-1982-471b-93ea-8e5f5bcf68ce}</Project>
       <Name>Orion.Logger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orion.Network\Orion.Network.csproj">
+      <Project>{31187885-a992-4072-9e0b-756f357882e7}</Project>
+      <Name>Orion.Network</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Orion.Server\Orion.Server.csproj">
       <Project>{5703608e-b441-4862-8479-f3eab8060ddb}</Project>
       <Name>Orion.Server</Name>

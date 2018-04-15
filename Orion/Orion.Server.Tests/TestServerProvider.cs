@@ -5,6 +5,7 @@
     using NUnit.Framework;
 
     using Orion.Logger.Abstract;
+    using Orion.Network.Abstract;
     using Orion.Server.Concrete;
     using Orion.Server.Wrapper.Abstract;
 
@@ -18,6 +19,8 @@
         private IOrionLogger orionLoggerMock;
 
         private ServerProvider systemUnderTest;
+
+        private ITcpClientProcessor tcpClientProcessorMock;
 
         private ITcpListenerWrapper tcpListenerWrapperMock;
 
@@ -56,6 +59,7 @@
         [SetUp]
         public void Setup()
         {
+            tcpClientProcessorMock = CreateTcpClientProcessorMock();
             tcpListenerWrapperMock = CreateTcpListenerWrapperMock();
             orionLoggerMock = CreateOrionLoggerMock();
             systemUnderTest = CreateSystemUnderTest();
@@ -68,7 +72,12 @@
 
         private ServerProvider CreateSystemUnderTest()
         {
-            return new ServerProvider(orionLoggerMock, tcpListenerWrapperMock);
+            return new ServerProvider(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
+        }
+
+        private ITcpClientProcessor CreateTcpClientProcessorMock()
+        {
+            return Substitute.For<ITcpClientProcessor>();
         }
 
         private ITcpListenerWrapper CreateTcpListenerWrapperMock()

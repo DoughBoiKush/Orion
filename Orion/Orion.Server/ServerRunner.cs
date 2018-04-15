@@ -4,6 +4,8 @@
 
     using Orion.Logger.Abstract;
     using Orion.Logger.Concrete;
+    using Orion.Network.Abstract;
+    using Orion.Network.Concrete;
     using Orion.Server.Abstract;
     using Orion.Server.Concrete;
     using Orion.Server.Wrapper.Abstract;
@@ -21,10 +23,13 @@
 
         private static IServerProvider serverProvider;
 
+        private static ITcpClientProcessor tcpClientProcessor;
+
         private static ITcpListenerWrapper tcpListenerWrapper;
 
         public static void Main()
         {
+            tcpClientProcessor = CreateTcpClientProcessor();
             ipAddress = CreateIpAddress();
             tcpListenerWrapper = CreateTcpListenerWrapper();
             orionLogger = CreateOrionLogger();
@@ -46,7 +51,12 @@
 
         private static IServerProvider CreateServerProvider()
         {
-            return new ServerProvider(orionLogger, tcpListenerWrapper);
+            return new ServerProvider(orionLogger, tcpListenerWrapper, tcpClientProcessor);
+        }
+
+        private static ITcpClientProcessor CreateTcpClientProcessor()
+        {
+            return new TcpClientProcessor();
         }
 
         private static ITcpListenerWrapper CreateTcpListenerWrapper()
