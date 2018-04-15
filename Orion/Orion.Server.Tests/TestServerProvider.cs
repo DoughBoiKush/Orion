@@ -82,7 +82,12 @@
 
         private ITcpListenerWrapper CreateTcpListenerWrapperMock()
         {
-            return Substitute.For<ITcpListenerWrapper>();
+            var listenerWrapperMock = Substitute.For<ITcpListenerWrapper>();
+
+            listenerWrapperMock.When(wrapper => wrapper.AcceptTcpClient())
+                .Do(info => { systemUnderTest.ServerRunning = false; });
+
+            return listenerWrapperMock;
         }
 
         private void InvokeRunServer()
