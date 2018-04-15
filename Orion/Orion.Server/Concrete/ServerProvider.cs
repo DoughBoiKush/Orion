@@ -30,21 +30,34 @@
             this.tcpClientProcessor = tcpClientProcessor;
         }
 
-        public bool ServerRunning { get; set; } = true; //TODO: Setup an actual controlled flag for this.
+        public bool ServerRunning { get; set; }
 
         public void RunServer()
         {
-            orionLogger.LogMessage(StartUpMessage);
-            tcpListenerWrapper.Start();
+            LogMessage(StartUpMessage);
+            StartServer();
 
             while (ServerRunning)
             {
-                orionLogger.LogMessage(ReadyForConnectionMessage);
-
-                var tcpClient = tcpListenerWrapper.AcceptTcpClient();
-
-                ThreadPool.QueueUserWorkItem(ProcessTcpClient, tcpClient);
+                LogMessage(ReadyForConnectionMessage);
+                var tcpClient = AcceptNextClientRequest();
+                ProcessClientRequest(tcpClient);
             }
+        }
+
+        private TcpClient AcceptNextClientRequest()
+        {
+            return tcpListenerWrapper.AcceptTcpClient();
+        }
+
+        private void LogMessage(string message)
+        {
+            orionLogger.LogMessage(message);
+        }
+
+        private void ProcessClientRequest(TcpClient tcpClient)
+        {
+            ThreadPool.QueueUserWorkItem(ProcessTcpClient, tcpClient);
         }
 
         private void ProcessTcpClient(object client)
@@ -52,6 +65,12 @@
             var tcpClient = (TcpClient)client;
 
             tcpClientProcessor.ProcessClient(tcpClient);
+        }
+
+        private void StartServer()
+        {
+            tcpListenerWrapper.Start();
+            this.ServerRunning = true;
         }
     }
 }
