@@ -4,7 +4,7 @@
 
     public interface ITcpListenerWrapper
     {
-        TcpClient AcceptTcpClient();
+        Socket AcceptSocket();
 
         void Start();
     }

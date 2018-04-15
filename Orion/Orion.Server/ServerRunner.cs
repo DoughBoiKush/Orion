@@ -1,7 +1,11 @@
 ﻿namespace Orion.Server
 {
+    using System.Net;
+
     using Orion.Logger.Abstract;
     using Orion.Logger.Concrete;
+    using Orion.Network.Abstract;
+    using Orion.Network.Concrete;
     using Orion.Server.Abstract;
     using Orion.Server.Concrete;
     using Orion.Server.Wrapper.Abstract;
@@ -9,19 +13,35 @@
 
     public class ServerRunner
     {
+        private const string IpAddressString = "127.0.0.1";
+
+        private const int Port = 43594;
+
+        private static IPAddress ipAddress;
+
         private static IOrionLogger orionLogger;
 
         private static IServerProvider serverProvider;
+
+        private static IConnectionProcessor tcpClientProcessor;
 
         private static ITcpListenerWrapper tcpListenerWrapper;
 
         public static void Main()
         {
-            serverProvider = CreateServerProvider();
+            tcpClientProcessor = CreateTcpClientProcessor();
+            ipAddress = CreateIpAddress();
             tcpListenerWrapper = CreateTcpListenerWrapper();
             orionLogger = CreateOrionLogger();
 
+            serverProvider = CreateServerProvider();
+
             serverProvider.RunServer();
+        }
+
+        private static IPAddress CreateIpAddress()
+        {
+            return IPAddress.Parse(IpAddressString);
         }
 
         private static IOrionLogger CreateOrionLogger()
@@ -31,12 +51,17 @@
 
         private static IServerProvider CreateServerProvider()
         {
-            return new ServerProvider(orionLogger, tcpListenerWrapper);
+            return new ServerProvider(orionLogger, tcpListenerWrapper, tcpClientProcessor);
+        }
+
+        private static IConnectionProcessor CreateTcpClientProcessor()
+        {
+            return new ConnectionProcessor();
         }
 
         private static ITcpListenerWrapper CreateTcpListenerWrapper()
         {
-            return new TcpListenerWrapper();
+            return new TcpListenerWrapper(Port, ipAddress);
         }
     }
 }

@@ -1,20 +1,39 @@
 ﻿namespace Orion.Server.Wrapper.Concrete
 {
-    using System;
+    using System.Net;
     using System.Net.Sockets;
 
     using Orion.Server.Wrapper.Abstract;
 
     public class TcpListenerWrapper : ITcpListenerWrapper
     {
-        public TcpClient AcceptTcpClient()
+        private readonly IPAddress ipAddress;
+
+        private readonly int port;
+
+        private readonly TcpListener tcpListener;
+
+        public TcpListenerWrapper(int port, IPAddress ipAddress)
         {
-            throw new NotImplementedException();
+            this.port = port;
+            this.ipAddress = ipAddress;
+
+            tcpListener = CreateTcpListener();
+        }
+
+        public Socket AcceptSocket()
+        {
+            return tcpListener.AcceptSocket();
         }
 
         public void Start()
         {
-            throw new NotImplementedException();
+            tcpListener.Start();
+        }
+
+        private TcpListener CreateTcpListener()
+        {
+            return new TcpListener(ipAddress, port);
         }
     }
 }
