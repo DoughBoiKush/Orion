@@ -21,9 +21,9 @@
             tcpListener = CreateTcpListener();
         }
 
-        public TcpClient AcceptTcpClient()
+        public Socket AcceptSocket()
         {
-            return tcpListener.AcceptTcpClient();
+            return tcpListener.AcceptSocket();
         }
 
         public void Start()

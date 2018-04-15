@@ -22,7 +22,7 @@
 
         private ServerProvider systemUnderTest;
 
-        private ITcpClientProcessor tcpClientProcessorMock;
+        private IConnectionProcessor tcpClientProcessorMock;
 
         private ITcpListenerWrapper tcpListenerWrapperMock;
 
@@ -51,11 +51,11 @@
         }
 
         [Test]
-        public void RunServer_WhenServerIsRunning_TcpListenerAcceptsTcpClientOnEachLoop()
+        public void RunServer_WhenServerIsRunning_TcpListenerAcceptsSocketOnEachLoop()
         {
             InvokeRunServer();
 
-            tcpListenerWrapperMock.Received(loopCount).AcceptTcpClient();
+            tcpListenerWrapperMock.Received(loopCount).AcceptSocket();
         }
 
         [SetUp]
@@ -78,16 +78,16 @@
             return new ServerProvider(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
         }
 
-        private ITcpClientProcessor CreateTcpClientProcessorMock()
+        private IConnectionProcessor CreateTcpClientProcessorMock()
         {
-            return Substitute.For<ITcpClientProcessor>();
+            return Substitute.For<IConnectionProcessor>();
         }
 
         private ITcpListenerWrapper CreateTcpListenerWrapperMock()
         {
             var listenerWrapperMock = Substitute.For<ITcpListenerWrapper>();
 
-            listenerWrapperMock.When(wrapper => wrapper.AcceptTcpClient()).Do(info => EnsureLoopCount());
+            listenerWrapperMock.When(wrapper => wrapper.AcceptSocket()).Do(info => EnsureLoopCount());
 
             return listenerWrapperMock;
         }

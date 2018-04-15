@@ -16,14 +16,14 @@
 
         private readonly IOrionLogger orionLogger;
 
-        private readonly ITcpClientProcessor tcpClientProcessor;
+        private readonly IConnectionProcessor tcpClientProcessor;
 
         private readonly ITcpListenerWrapper tcpListenerWrapper;
 
         public ServerProvider(
             IOrionLogger orionLogger,
             ITcpListenerWrapper tcpListenerWrapper,
-            ITcpClientProcessor tcpClientProcessor)
+            IConnectionProcessor tcpClientProcessor)
         {
             this.orionLogger = orionLogger;
             this.tcpListenerWrapper = tcpListenerWrapper;
@@ -40,14 +40,14 @@
             while (ServerRunning)
             {
                 LogMessage(ReadyForConnectionMessage);
-                var tcpClient = AcceptNextClientRequest();
-                ProcessClientRequest(tcpClient);
+                Socket socket = AcceptNextPendingConnectionRequest();
+                ProcessConnectionRequest(socket);
             }
         }
 
-        private TcpClient AcceptNextClientRequest()
+        private Socket AcceptNextPendingConnectionRequest()
         {
-            return tcpListenerWrapper.AcceptTcpClient();
+            return tcpListenerWrapper.AcceptSocket();
         }
 
         private void LogMessage(string message)
@@ -55,22 +55,22 @@
             orionLogger.LogMessage(message);
         }
 
-        private void ProcessClientRequest(TcpClient tcpClient)
+        private void ProcessConnection(object obj)
         {
-            ThreadPool.QueueUserWorkItem(ProcessTcpClient, tcpClient);
+            var socket = (Socket)obj;
+
+            tcpClientProcessor.ProcessConnection(socket);
         }
 
-        private void ProcessTcpClient(object client)
+        private void ProcessConnectionRequest(Socket socket)
         {
-            var tcpClient = (TcpClient)client;
-
-            tcpClientProcessor.ProcessClient(tcpClient);
+            ThreadPool.QueueUserWorkItem(ProcessConnection, socket);
         }
 
         private void StartServer()
         {
             tcpListenerWrapper.Start();
-            this.ServerRunning = true;
+            ServerRunning = true;
         }
     }
 }

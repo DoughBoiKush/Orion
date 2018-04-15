@@ -5,9 +5,9 @@
 
     using Orion.Network.Abstract;
 
-    public class TcpClientProcessor : ITcpClientProcessor
+    public class ConnectionProcessor : IConnectionProcessor
     {
-        public void ProcessClient(TcpClient tcpClient)
+        public void ProcessConnection(Socket socket)
         {
             throw new NotImplementedException();
         }

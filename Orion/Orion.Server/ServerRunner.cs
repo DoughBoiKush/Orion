@@ -23,7 +23,7 @@
 
         private static IServerProvider serverProvider;
 
-        private static ITcpClientProcessor tcpClientProcessor;
+        private static IConnectionProcessor tcpClientProcessor;
 
         private static ITcpListenerWrapper tcpListenerWrapper;
 
@@ -54,9 +54,9 @@
             return new ServerProvider(orionLogger, tcpListenerWrapper, tcpClientProcessor);
         }
 
-        private static ITcpClientProcessor CreateTcpClientProcessor()
+        private static IConnectionProcessor CreateTcpClientProcessor()
         {
-            return new TcpClientProcessor();
+            return new ConnectionProcessor();
         }
 
         private static ITcpListenerWrapper CreateTcpListenerWrapper()
