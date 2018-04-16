@@ -12,26 +12,21 @@
 
         public void LogMessage(string message)
         {
+            string callingAssembly = Assembly.GetCallingAssembly().GetName().Name;
             var relativeFilePath = GetRelativeFilePath();
-            WriteMessage(message, relativeFilePath);
+            WriteMessage(callingAssembly, message, relativeFilePath);
         }
 
-        private string FormatMessage(string message)
+        private string FormatMessage(string callingAssembly, string message)
         {
             string formattedDateTime = GetFormattedTime();
-            string callingProject = GetFormattedProjectName();
+            string callingProject = GetFormattedProjectName(callingAssembly);
             return $"{formattedDateTime}{callingProject}\t:: {message}";
         }
 
-        private string GetCallingProjectName()
+        private string GetFormattedProjectName(string callingAssembly)
         {
-            return Assembly.GetCallingAssembly().GetName().Name;
-        }
-
-        private string GetFormattedProjectName()
-        {
-            string projectName = GetCallingProjectName();
-            string formattedProjectName = projectName.Split('.')[1];
+            string formattedProjectName = callingAssembly.Split('.')[1];
             return $"[{formattedProjectName}]";
         }
 
@@ -49,9 +44,9 @@
             return Path.Combine(directoryName, OrionLogRelativeDirectory);
         }
 
-        private void WriteMessage(string message, string relativeFilePath)
+        private void WriteMessage(string callingAssembly, string message, string relativeFilePath)
         {
-            string formattedMessage = FormatMessage(message);
+            string formattedMessage = FormatMessage(callingAssembly, message);
             File.AppendAllLines(relativeFilePath, new[] { formattedMessage });
             Console.Write(message);
         }
