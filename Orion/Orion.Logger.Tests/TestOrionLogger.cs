@@ -71,7 +71,7 @@
 
             Assert.That(actualLogContents[0].Contains("\t:: something"));
         }
-
+        
         [SetUp]
         public void SetUp()
         {

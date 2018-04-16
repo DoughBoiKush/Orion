@@ -13,7 +13,7 @@
         public void LogMessage(string message)
         {
             string callingAssembly = Assembly.GetCallingAssembly().GetName().Name;
-            var relativeFilePath = GetRelativeFilePath();
+            string relativeFilePath = GetRelativeFilePath();
             WriteMessage(callingAssembly, message, relativeFilePath);
         }
 
@@ -48,7 +48,6 @@
         {
             string formattedMessage = FormatMessage(callingAssembly, message);
             File.AppendAllLines(relativeFilePath, new[] { formattedMessage });
-            Console.Write(message);
         }
     }
 }
