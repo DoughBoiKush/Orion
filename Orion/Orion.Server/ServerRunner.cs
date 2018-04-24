@@ -24,9 +24,13 @@
 
         public static void Main()
         {
+<<<<<<< HEAD
+=======
             tcpClientProcessor = CreateTcpClientProcessor();
+>>>>>>> dev
             tcpListenerWrapper = CreateTcpListenerWrapper();
             orionLogger = CreateOrionLogger();
+            serverProvider = CreateServerProvider();
 
             IServer server = CreateServer();
             Run(server);
