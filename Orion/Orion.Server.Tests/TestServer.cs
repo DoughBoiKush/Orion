@@ -1,16 +1,18 @@
 ﻿namespace Orion.Server.Tests
 {
+    using System.Net.Sockets;
+
     using NSubstitute;
 
     using NUnit.Framework;
 
     using Orion.Logger.Abstract;
     using Orion.Network.Abstract;
+    using Orion.Server.Abstract;
     using Orion.Server.Concrete;
-    using Orion.Server.Wrapper.Abstract;
 
     [TestFixture]
-    public class TestServerProvider
+    public class TestServer
     {
         private const string ReadyForConnectionsMessage = "Ready for connections...";
 
@@ -20,7 +22,9 @@
 
         private IOrionLogger orionLoggerMock;
 
-        private ServerProvider systemUnderTest;
+        private Server systemUnderTest;
+
+        private TcpClient tcpClient;
 
         private IConnectionProcessor tcpClientProcessorMock;
 
@@ -43,11 +47,19 @@
         }
 
         [Test]
-        public void RunServer_WhenServerIsRunning_ReadyForConnectionsMessageIsLoggedForEachLoop()
+        public void RunServer_WhenServerIsRunning_EachAcceptedClientRequestInTheLoopIsProcessed()
         {
             InvokeRunServer();
 
-            orionLoggerMock.Received(loopCount).LogMessage(ReadyForConnectionsMessage);
+            tcpClientProcessorMock.Received(loopCount).ProcessConnection(tcpClient);
+        }
+
+        [Test]
+        public void RunServer_WhenServerIsRunning_ReadyForConnectionsMessageIsLogged()
+        {
+            InvokeRunServer();
+
+            orionLoggerMock.Received(1).LogMessage(ReadyForConnectionsMessage);
         }
 
         [Test]
@@ -55,13 +67,14 @@
         {
             InvokeRunServer();
 
-            tcpListenerWrapperMock.Received(loopCount).AcceptSocket();
+            tcpListenerWrapperMock.Received(loopCount).AcceptTcpClient();
         }
 
         [SetUp]
         public void Setup()
         {
             ZeroTheLoopCount();
+            tcpClient = CreateTcpClient();
             tcpClientProcessorMock = CreateTcpClientProcessorMock();
             tcpListenerWrapperMock = CreateTcpListenerWrapperMock();
             orionLoggerMock = CreateOrionLoggerMock();
@@ -73,9 +86,14 @@
             return Substitute.For<IOrionLogger>();
         }
 
-        private ServerProvider CreateSystemUnderTest()
+        private Server CreateSystemUnderTest()
         {
-            return new ServerProvider(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
+            return new Server(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
+        }
+
+        private TcpClient CreateTcpClient()
+        {
+            return new TcpClient();
         }
 
         private IConnectionProcessor CreateTcpClientProcessorMock()
@@ -87,7 +105,8 @@
         {
             var listenerWrapperMock = Substitute.For<ITcpListenerWrapper>();
 
-            listenerWrapperMock.When(wrapper => wrapper.AcceptSocket()).Do(info => EnsureLoopCount());
+            listenerWrapperMock.AcceptTcpClient().Returns(tcpClient);
+            listenerWrapperMock.When(wrapper => wrapper.AcceptTcpClient()).Do(info => EnsureLoopCount());
 
             return listenerWrapperMock;
         }
@@ -104,7 +123,7 @@
 
         private void InvokeRunServer()
         {
-            systemUnderTest.RunServer();
+            systemUnderTest.Run();
         }
 
         private void ZeroTheLoopCount()

@@ -1,14 +1,12 @@
 ﻿namespace Orion.Server.Concrete
 {
     using System.Net.Sockets;
-    using System.Threading;
 
     using Orion.Logger.Abstract;
     using Orion.Network.Abstract;
     using Orion.Server.Abstract;
-    using Orion.Server.Wrapper.Abstract;
 
-    public class ServerProvider : IServerProvider
+    public class Server : IServer
     {
         private const string ReadyForConnectionMessage = "Ready for connections...";
 
@@ -20,7 +18,7 @@
 
         private readonly ITcpListenerWrapper tcpListenerWrapper;
 
-        public ServerProvider(
+        public Server(
             IOrionLogger orionLogger,
             ITcpListenerWrapper tcpListenerWrapper,
             IConnectionProcessor tcpClientProcessor)
@@ -32,22 +30,22 @@
 
         public bool ServerRunning { get; set; }
 
-        public void RunServer()
+        public void Run()
         {
             LogMessage(StartUpMessage);
             StartServer();
 
+            LogMessage(ReadyForConnectionMessage);
             while (ServerRunning)
             {
-                LogMessage(ReadyForConnectionMessage);
-                Socket socket = AcceptNextPendingConnectionRequest();
-                ProcessConnectionRequest(socket);
+                TcpClient client = AcceptNextPendingConnectionRequest();
+                ProcessConnectionRequest(client);
             }
         }
 
-        private Socket AcceptNextPendingConnectionRequest()
+        private TcpClient AcceptNextPendingConnectionRequest()
         {
-            return tcpListenerWrapper.AcceptSocket();
+            return tcpListenerWrapper.AcceptTcpClient();
         }
 
         private void LogMessage(string message)
@@ -55,16 +53,9 @@
             orionLogger.LogMessage(message);
         }
 
-        private void ProcessConnection(object obj)
+        private void ProcessConnectionRequest(TcpClient client)
         {
-            var socket = (Socket)obj;
-
-            tcpClientProcessor.ProcessConnection(socket);
-        }
-
-        private void ProcessConnectionRequest(Socket socket)
-        {
-            ThreadPool.QueueUserWorkItem(ProcessConnection, socket);
+            tcpClientProcessor.ProcessConnection(client);
         }
 
         private void StartServer()
