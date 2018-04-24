@@ -1,8 +1,8 @@
-﻿namespace Orion.Server.Wrapper.Concrete
+﻿namespace Orion.Server.Concrete
 {
     using System.Net.Sockets;
 
-    using Orion.Server.Wrapper.Abstract;
+    using Orion.Server.Abstract;
 
     public class TcpListenerWrapper : ITcpListenerWrapper
     {

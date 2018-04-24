@@ -5,7 +5,6 @@
     using Orion.Logger.Abstract;
     using Orion.Network.Abstract;
     using Orion.Server.Abstract;
-    using Orion.Server.Wrapper.Abstract;
 
     public class Server : IServer
     {

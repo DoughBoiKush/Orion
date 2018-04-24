@@ -47,8 +47,8 @@
     <Compile Include="Concrete\Server.cs" />
     <Compile Include="ServerRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wrapper\Abstract\ITcpListenerWrapper.cs" />
-    <Compile Include="Wrapper\Concrete\TcpListenerWrapper.cs" />
+    <Compile Include="Abstract\ITcpListenerWrapper.cs" />
+    <Compile Include="Concrete\TcpListenerWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orion.Logger\Orion.Logger.csproj">
@@ -60,5 +60,6 @@
       <Name>Orion.Network</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
