@@ -8,7 +8,7 @@
     using Orion.Server.Abstract;
     using Orion.Server.Wrapper.Abstract;
 
-    public class ServerProvider : IServerProvider
+    public class Server : IServer
     {
         private const string ReadyForConnectionMessage = "Ready for connections...";
 
@@ -20,7 +20,7 @@
 
         private readonly ITcpListenerWrapper tcpListenerWrapper;
 
-        public ServerProvider(
+        public Server(
             IOrionLogger orionLogger,
             ITcpListenerWrapper tcpListenerWrapper,
             IConnectionProcessor tcpClientProcessor)
@@ -32,22 +32,22 @@
 
         public bool ServerRunning { get; set; }
 
-        public void RunServer()
+        public void Run()
         {
             LogMessage(StartUpMessage);
             StartServer();
 
+            LogMessage(ReadyForConnectionMessage);
             while (ServerRunning)
             {
-                LogMessage(ReadyForConnectionMessage);
-                Socket socket = AcceptNextPendingConnectionRequest();
-                ProcessConnectionRequest(socket);
+                TcpClient client = AcceptNextPendingConnectionRequest();
+                ProcessConnectionRequest(client);
             }
         }
 
-        private Socket AcceptNextPendingConnectionRequest()
+        private TcpClient AcceptNextPendingConnectionRequest()
         {
-            return tcpListenerWrapper.AcceptSocket();
+            return tcpListenerWrapper.AcceptTcpClient();
         }
 
         private void LogMessage(string message)
@@ -62,9 +62,9 @@
             tcpClientProcessor.ProcessConnection(socket);
         }
 
-        private void ProcessConnectionRequest(Socket socket)
+        private void ProcessConnectionRequest(TcpClient client)
         {
-            ThreadPool.QueueUserWorkItem(ProcessConnection, socket);
+            ThreadPool.QueueUserWorkItem(ProcessConnection, client);
         }
 
         private void StartServer()

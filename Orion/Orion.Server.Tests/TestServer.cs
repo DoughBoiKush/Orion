@@ -10,7 +10,7 @@
     using Orion.Server.Wrapper.Abstract;
 
     [TestFixture]
-    public class TestServerProvider
+    public class TestServer
     {
         private const string ReadyForConnectionsMessage = "Ready for connections...";
 
@@ -20,7 +20,7 @@
 
         private IOrionLogger orionLoggerMock;
 
-        private ServerProvider systemUnderTest;
+        private Server systemUnderTest;
 
         private IConnectionProcessor tcpClientProcessorMock;
 
@@ -43,11 +43,11 @@
         }
 
         [Test]
-        public void RunServer_WhenServerIsRunning_ReadyForConnectionsMessageIsLoggedForEachLoop()
+        public void RunServer_WhenServerIsRunning_ReadyForConnectionsMessageIsLoggedp()
         {
             InvokeRunServer();
 
-            orionLoggerMock.Received(loopCount).LogMessage(ReadyForConnectionsMessage);
+            orionLoggerMock.Received(1).LogMessage(ReadyForConnectionsMessage);
         }
 
         [Test]
@@ -55,7 +55,7 @@
         {
             InvokeRunServer();
 
-            tcpListenerWrapperMock.Received(loopCount).AcceptSocket();
+            tcpListenerWrapperMock.Received(loopCount).AcceptTcpClient();
         }
 
         [SetUp]
@@ -73,9 +73,9 @@
             return Substitute.For<IOrionLogger>();
         }
 
-        private ServerProvider CreateSystemUnderTest()
+        private Server CreateSystemUnderTest()
         {
-            return new ServerProvider(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
+            return new Server(orionLoggerMock, tcpListenerWrapperMock, tcpClientProcessorMock);
         }
 
         private IConnectionProcessor CreateTcpClientProcessorMock()
@@ -87,7 +87,7 @@
         {
             var listenerWrapperMock = Substitute.For<ITcpListenerWrapper>();
 
-            listenerWrapperMock.When(wrapper => wrapper.AcceptSocket()).Do(info => EnsureLoopCount());
+            listenerWrapperMock.When(wrapper => wrapper.AcceptTcpClient()).Do(info => EnsureLoopCount());
 
             return listenerWrapperMock;
         }
@@ -104,7 +104,7 @@
 
         private void InvokeRunServer()
         {
-            systemUnderTest.RunServer();
+            systemUnderTest.Run();
         }
 
         private void ZeroTheLoopCount()
