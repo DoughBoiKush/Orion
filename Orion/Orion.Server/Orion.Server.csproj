@@ -43,18 +43,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abstract\IServerProvider.cs" />
-    <Compile Include="Concrete\ServerProvider.cs" />
+    <Compile Include="Abstract\IServer.cs" />
+    <Compile Include="Concrete\Server.cs" />
     <Compile Include="ServerRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Wrapper\Abstract\ITcpListenerWrapper.cs" />
-    <Compile Include="Wrapper\Concrete\TcpListenerWrapper.cs" />
+    <Compile Include="Abstract\ITcpListenerWrapper.cs" />
+    <Compile Include="Concrete\TcpListenerWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Orion.Logger\Orion.Logger.csproj">
       <Project>{520e75f9-1982-471b-93ea-8e5f5bcf68ce}</Project>
       <Name>Orion.Logger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orion.Network\Orion.Network.csproj">
+      <Project>{31187885-a992-4072-9e0b-756f357882e7}</Project>
+      <Name>Orion.Network</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

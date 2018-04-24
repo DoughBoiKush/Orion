@@ -30,6 +30,7 @@
             return $"[{formattedProjectName}]";
         }
 
+<<<<<<< HEAD
         private string GetFormattedTime()
         {
             return $"[{DateTime.Now:hh:mm:ss}]";
@@ -48,6 +49,9 @@
         {
             string formattedMessage = FormatMessage(callingAssembly, message);
             File.AppendAllLines(relativeFilePath, new[] { formattedMessage });
+=======
+            Console.WriteLine(message);
+>>>>>>> dev
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Orion.Server.Wrapper.Abstract
+﻿namespace Orion.Server.Abstract
 {
     using System.Net.Sockets;
 
