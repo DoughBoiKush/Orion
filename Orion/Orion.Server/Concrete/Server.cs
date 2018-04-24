@@ -1,7 +1,6 @@
 ﻿namespace Orion.Server.Concrete
 {
     using System.Net.Sockets;
-    using System.Threading;
 
     using Orion.Logger.Abstract;
     using Orion.Network.Abstract;
@@ -55,16 +54,9 @@
             orionLogger.LogMessage(message);
         }
 
-        private void ProcessConnection(object obj)
-        {
-            var socket = (Socket)obj;
-
-            tcpClientProcessor.ProcessConnection(socket);
-        }
-
         private void ProcessConnectionRequest(TcpClient client)
         {
-            ThreadPool.QueueUserWorkItem(ProcessConnection, client);
+            tcpClientProcessor.ProcessConnection(client);
         }
 
         private void StartServer()

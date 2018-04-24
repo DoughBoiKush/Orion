@@ -4,6 +4,6 @@
 
     public interface IConnectionProcessor
     {
-        void ProcessConnection(Socket socket);
+        void ProcessConnection(TcpClient client);
     }
 }

@@ -7,7 +7,7 @@
 
     public class ConnectionProcessor : IConnectionProcessor
     {
-        public void ProcessConnection(Socket socket)
+        public void ProcessConnection(TcpClient socket)
         {
             throw new NotImplementedException();
         }
